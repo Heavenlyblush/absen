@@ -1,70 +1,78 @@
-<!-- ... existing code ... -->
-  <!-- Tailwind CSS & Inter Font -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Absensi Karyawan - Heavenly Blush</title>
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    body { font-family: 'Inter', sans-serif; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      -webkit-tap-highlight-color: transparent;
+    }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col items-center justify-between p-4 sm:p-6">
+<body class="bg-slate-100 text-slate-800 min-h-[100dvh] flex flex-col justify-between p-2 sm:p-6">
 
-  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden flex flex-col">
+  <div class="w-full max-w-lg mx-auto bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-slate-100 overflow-hidden flex flex-col my-auto">
     
     <!-- Header with Logo -->
-    <div class="bg-slate-900 text-white p-6 text-center relative overflow-hidden">
-      <!-- PWA Install Button (Desktop/Mobile) -->
-      <button id="install-btn" class="hidden absolute top-4 right-4 bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg shadow transition-all flex items-center gap-1">
-        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+    <div class="bg-slate-900 text-white p-6 sm:p-8 text-center relative overflow-hidden">
+      <!-- PWA Install Button -->
+      <button id="install-btn" class="hidden absolute top-4 right-4 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3 py-2 rounded-xl shadow transition-all flex items-center gap-1.5 z-10">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
         Install App
       </button>
 
       <div class="absolute -right-10 -top-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl"></div>
-      <img src="https://heavenlyblush.com/wp-content/uploads/2022/03/cropped-Logo_hb_2022-2-1.png" alt="Heavenly Blush Logo" class="h-10 mx-auto mb-3 filter brightness-0 invert object-contain">
-      <h1 class="text-xl font-bold tracking-tight">Portal Absensi Karyawan</h1>
-      <p id="realtime-clock" class="text-xs text-indigo-200 mt-1 font-medium">Memuat waktu...</p>
+      <img src="https://heavenlyblush.com/wp-content/uploads/2022/03/cropped-Logo_hb_2022-2-1.png" alt="Heavenly Blush Logo" class="h-10 sm:h-12 mx-auto mb-3 filter brightness-0 invert object-contain">
+      <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Portal Absensi Karyawan</h1>
+      <p id="realtime-clock" class="text-xs sm:text-sm text-indigo-200 mt-1 font-medium">Memuat waktu...</p>
     </div>
 
     <!-- Navigation Tabs -->
-    <div class="flex border-b border-slate-100 bg-slate-50/50 p-1.5 gap-1">
-      <button onclick="switchTab('form')" id="btn-tab-form" class="flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all bg-white text-indigo-600 shadow-sm">
+    <div class="flex border-b border-slate-100 bg-slate-50/50 p-2 gap-2">
+      <button onclick="switchTab('form')" id="btn-tab-form" class="flex-1 py-3 text-xs sm:text-sm font-semibold rounded-2xl transition-all bg-white text-indigo-600 shadow-sm">
         Form Absen
       </button>
-      <button onclick="switchTab('history')" id="btn-tab-history" class="flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all text-slate-500 hover:text-slate-800">
+      <button onclick="switchTab('history')" id="btn-tab-history" class="flex-1 py-3 text-xs sm:text-sm font-semibold rounded-2xl transition-all text-slate-500 hover:text-slate-800">
         Riwayat (7 Hari)
       </button>
     </div>
 
     <!-- Tab 1: Form Absensi -->
-    <div id="tab-form" class="tab-content active p-6 space-y-4">
+    <div id="tab-form" class="tab-content active p-6 sm:p-8 space-y-5">
       <!-- Reminder Banner -->
-      <div id="reminder-banner" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium flex items-center gap-2.5">
+      <div id="reminder-banner" class="hidden p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs sm:text-sm font-medium flex items-center gap-3">
         <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
         <span id="reminder-text">Pengingat: Jangan lupa absen hari ini!</span>
       </div>
 
-      <form id="attendanceForm" onsubmit="event.preventDefault(); handleAttendance();" class="space-y-4">
+      <form id="attendanceForm" onsubmit="event.preventDefault(); handleAttendance();" class="space-y-5">
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Email Karyawan</label>
+          <label class="block text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-500 mb-2">Email Karyawan</label>
           <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
             </span>
             <input type="email" id="email" required placeholder="nama@heavenlyblush.com" oninput="onEmailInput()"
-              class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+              class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Catatan / Keterangan</label>
+          <label class="block text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-500 mb-2">Catatan / Keterangan</label>
           <textarea id="notes" rows="3" placeholder="Opsional (misal: WFH, Dinas Luar)..."
-            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all resize-none"></textarea>
+            class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all resize-none"></textarea>
         </div>
 
-        <!-- Dynamic Action Button (Single Toggle Button: Masuk / Pulang) -->
-        <button type="submit" id="action-btn" class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2">
+        <button type="submit" id="action-btn" class="w-full py-4 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-base rounded-2xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2.5">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
           <span id="action-btn-text">Absen Masuk</span>
         </button>
@@ -72,30 +80,29 @@
     </div>
 
     <!-- Tab 2: Riwayat Aktivitas & Filter Email -->
-    <div id="tab-history" class="tab-content p-6 space-y-4">
+    <div id="tab-history" class="tab-content p-6 sm:p-8 space-y-5">
       <div class="flex flex-col gap-3">
         <div class="flex justify-between items-center">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Aktivitas 7 Hari Terakhir</h2>
-          <button onclick="loadHistory()" class="text-xs text-indigo-600 hover:underline font-medium">Muat Ulang</button>
+          <h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500">Aktivitas 7 Hari Terakhir</h2>
+          <button onclick="loadHistory()" class="text-xs sm:text-sm text-indigo-600 hover:underline font-medium">Muat Ulang</button>
         </div>
         
-        <!-- Dropdown Filter Email Unique (Auto-selected & Hidden/Clean) -->
         <div>
-          <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Filter Berdasarkan Email</label>
-          <select id="email-filter" onchange="filterHistoryByEmail()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Filter Berdasarkan Email</label>
+          <select id="email-filter" onchange="filterHistoryByEmail()" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs sm:text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
             <option value="">-- Masukkan Email di Form Utama --</option>
           </select>
         </div>
       </div>
 
-      <div class="overflow-x-auto rounded-xl border border-slate-100 max-h-72 overflow-y-auto">
-        <table class="w-full text-left text-xs">
+      <div class="overflow-x-auto rounded-2xl border border-slate-100 max-h-80 overflow-y-auto">
+        <table class="w-full text-left text-xs sm:text-sm min-w-[320px]">
           <thead class="bg-slate-50 text-slate-600 sticky top-0 border-b border-slate-100">
             <tr>
-              <th class="p-3 font-semibold">Hari, Tanggal</th>
-              <th class="p-3 font-semibold">Masuk</th>
-              <th class="p-3 font-semibold">Keluar</th>
-              <th class="p-3 font-semibold text-center">Status</th>
+              <th class="p-3.5 font-semibold">Hari, Tanggal</th>
+              <th class="p-3.5 font-semibold">Masuk</th>
+              <th class="p-3.5 font-semibold">Keluar</th>
+              <th class="p-3.5 font-semibold text-center">Status</th>
             </tr>
           </thead>
           <tbody id="history-table-body" class="divide-y divide-slate-100">
@@ -108,28 +115,25 @@
     </div>
 
     <!-- Footer Branding -->
-    <div class="p-4 bg-slate-50 border-t border-slate-100 text-center text-[11px] text-slate-400 font-medium">
+    <div class="p-4 bg-slate-50 border-t border-slate-100 text-center text-xs text-slate-400 font-medium">
       © 2026 • Absensi Digital • Heavenly Blush
     </div>
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 -translate-y-20 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-white shadow-xl border border-slate-100 min-w-[280px]">
-    <div id="toast-icon-wrapper" class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"></div>
+  <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 -translate-y-20 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-3 px-5 py-4 rounded-2xl bg-white shadow-2xl border border-slate-100 min-w-[300px] max-w-[90vw]">
+    <div id="toast-icon-wrapper" class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"></div>
     <div>
-      <h4 id="toast-title" class="text-xs font-bold text-slate-900"></h4>
+      <h4 id="toast-title" class="text-xs sm:text-sm font-bold text-slate-900"></h4>
       <p id="toast-message" class="text-xs text-slate-500 mt-0.5"></p>
     </div>
   </div>
 
   <script>
-    // Konfigurasi Web App Google Spreadsheet
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0kJI9MILSLdJjM1Vj2qUE31JPhYJXeSeeyZTs-nYO3gx7iCfb4MiSk156iH2dKTQBGg/exec";
-
-    // Global Cache for History Data
     let globalHistoryData = [];
 
-    // PWA Service Worker Registration & Install Prompt
+    // PWA Install Prompt Handler
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -181,8 +185,6 @@
       const now = new Date();
       const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
       document.getElementById('realtime-clock').textContent = now.toLocaleDateString('id-ID', options);
-
-      // Reminder check
       checkReminders(now);
     }
     setInterval(updateRealtimeClock, 1000);
@@ -195,17 +197,13 @@
       const text = document.getElementById('reminder-text');
 
       const todayStr = now.toISOString().slice(0, 10);
-      const email = document.getElementById('email').value.trim();
       const lastCheckedDate = localStorage.getItem('last_attendance_date');
       const isCheckedInToday = (lastCheckedDate === todayStr);
 
-      // Pukul 07:00 - 08:00 (Pengingat Masuk jika belum)
       if (hours === 7 && !isCheckedInToday) {
         banner.classList.remove('hidden');
         text.textContent = "Pengingat: Jangan lupa absen masuk hari ini!";
-      } 
-      // Pukul 16:55 (Pengingat Pulang)
-      else if (hours === 16 && minutes >= 55) {
+      } else if (hours === 16 && minutes >= 55) {
         banner.classList.remove('hidden');
         text.textContent = "Jangan lupa absen pulang!";
       } else {
@@ -216,15 +214,15 @@
     // Tab Switching Logic
     function switchTab(tabName) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.getElementById('btn-tab-form').className = "flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all text-slate-500 hover:text-slate-800";
-      document.getElementById('btn-tab-history').className = "flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all text-slate-500 hover:text-slate-800";
+      document.getElementById('btn-tab-form').className = "flex-1 py-3 text-xs sm:text-sm font-semibold rounded-2xl transition-all text-slate-500 hover:text-slate-800";
+      document.getElementById('btn-tab-history').className = "flex-1 py-3 text-xs sm:text-sm font-semibold rounded-2xl transition-all text-slate-500 hover:text-slate-800";
 
       if (tabName === 'form') {
         document.getElementById('tab-form').classList.add('active');
-        document.getElementById('btn-tab-form').className = "flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all bg-white text-indigo-600 shadow-sm";
+        document.getElementById('btn-tab-form').className = "flex-1 py-3 text-xs sm:text-sm font-semibold rounded-2xl transition-all bg-white text-indigo-600 shadow-sm";
       } else {
         document.getElementById('tab-history').classList.add('active');
-        document.getElementById('btn-tab-history').className = "flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all bg-white text-indigo-600 shadow-sm";
+        document.getElementById('btn-tab-history').className = "flex-1 py-3 text-xs sm:text-sm font-semibold rounded-2xl transition-all bg-white text-indigo-600 shadow-sm";
         syncEmailDropdownAndLoad();
       }
     }
@@ -237,10 +235,10 @@
       document.getElementById('toast-message').textContent = message;
 
       if (type === 'success') {
-        iconWrap.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600";
+        iconWrap.className = "w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600";
         iconWrap.innerHTML = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`;
       } else {
-        iconWrap.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-rose-50 text-rose-600";
+        iconWrap.className = "w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-rose-50 text-rose-600";
         iconWrap.innerHTML = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>`;
       }
 
@@ -252,7 +250,7 @@
       }, 4000);
     }
 
-    // LocalStorage Button State Management
+    // LocalStorage State Management
     function checkAttendanceStateOnLoad() {
       const savedEmail = localStorage.getItem('user_email');
       if (savedEmail) {
@@ -285,17 +283,17 @@
       const btnText = document.getElementById('action-btn-text');
 
       if (state === 'Pulang') {
-        btn.className = "w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center gap-2";
+        btn.className = "w-full py-4 px-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white font-semibold text-base rounded-2xl shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center gap-2.5";
         btnText.textContent = "Absen Pulang";
       } else {
-        btn.className = "w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2";
+        btn.className = "w-full py-4 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-base rounded-2xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2.5";
         btnText.textContent = "Absen Masuk";
       }
     }
 
     window.addEventListener('DOMContentLoaded', checkAttendanceStateOnLoad);
 
-    // Handle Attendance Process with Geolocation & Fetch API
+    // Handle Attendance Process
     function handleAttendance() {
       const email = document.getElementById('email').value.trim();
       const notes = document.getElementById('notes').value.trim();
@@ -324,7 +322,6 @@
       }
     }
 
-    // Send payload to Google Spreadsheet via URL-encoded form data (CORS-safe)
     function sendDataToSheet(email, location, type, notes) {
       if (SCRIPT_URL.includes("URL_WEB_APP_GOOGLE_SCRIPT_ANDA_DISINI")) {
         setTimeout(() => {
@@ -357,7 +354,6 @@
       });
     }
 
-    // Update UI State after successful action
     function processUIAfterSuccess(email, type) {
       showToast('success', 'Berhasil!', `Absen ${type} berhasil dicatat.`);
       
@@ -372,11 +368,10 @@
         localStorage.setItem('attendance_state', 'Selesai');
         setButtonState('Masuk');
         document.getElementById('attendanceForm').reset();
-        document.getElementById('email').value = email; // keep email
+        document.getElementById('email').value = email;
       }
     }
 
-    // Load History & Auto-Sync Email Dropdown
     function syncEmailDropdownAndLoad() {
       const emailInput = document.getElementById('email').value.trim();
       const select = document.getElementById('email-filter');
@@ -401,12 +396,11 @@
       tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Memuat riwayat...</td></tr>`;
 
       if (SCRIPT_URL.includes("URL_WEB_APP_GOOGLE_SCRIPT_ANDA_DISINI")) {
-        // Mock data for preview
         setTimeout(() => {
           globalHistoryData = [
-            { date: "17/08/2026", email: emailSelect, inTime: "08:00", outTime: "17:00", notes: "" },
-            { date: "16/08/2026", email: emailSelect, inTime: "08:05", outTime: "-", notes: "" },
-            { date: "15/08/2026", email: emailSelect, inTime: "07:55", outTime: "17:02", notes: "" }
+            { date: "17/08/2026", email: emailSelect, inTime: "08:00", outTime: "17:00" },
+            { date: "16/08/2026", email: emailSelect, inTime: "08:05", outTime: "-" },
+            { date: "15/08/2026", email: emailSelect, inTime: "07:55", outTime: "17:02" }
           ];
           filterHistoryByEmail();
         }, 500);
@@ -428,7 +422,6 @@
         });
     }
 
-    // Filter and Render History Table for Last 7 Days (Consolidated into 1 Row per Date)
     function filterHistoryByEmail() {
       const selectedEmail = document.getElementById('email-filter').value.trim();
       const tbody = document.getElementById('history-table-body');
@@ -445,7 +438,6 @@
         return;
       }
 
-      // Group records by date to ensure exactly 1 row per date
       const groupedByDate = {};
       filtered.forEach(item => {
         const dateKey = item.date;
@@ -468,20 +460,19 @@
         const hasIn = row.inTime && row.inTime !== '-';
         const hasOut = row.outTime && row.outTime !== '-';
         
-        // Status icon: Green checkmark if complete, Orange exclamation mark if incomplete
         let statusIcon = "";
         if (hasIn && hasOut) {
-          statusIcon = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 font-bold" title="Lengkap">✓</span>`;
+          statusIcon = `<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-emerald-100 text-emerald-600 font-bold" title="Lengkap">✓</span>`;
         } else {
-          statusIcon = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-600 font-bold" title="Belum Lengkap">!</span>`;
+          statusIcon = `<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-amber-100 text-amber-600 font-bold" title="Belum Lengkap">!</span>`;
         }
 
         html += `
           <tr class="hover:bg-slate-50/50 transition-colors">
-            <td class="p-3 font-medium text-slate-700">${row.date}</td>
-            <td class="p-3 text-emerald-600 font-semibold">${hasIn ? row.inTime : '-'}</td>
-            <td class="p-3 text-indigo-600 font-semibold">${hasOut ? row.outTime : '-'}</td>
-            <td class="p-3 text-center">${statusIcon}</td>
+            <td class="p-3.5 font-medium text-slate-700">${row.date}</td>
+            <td class="p-3.5 text-emerald-600 font-semibold">${hasIn ? row.inTime : '-'}</td>
+            <td class="p-3.5 text-indigo-600 font-semibold">${hasOut ? row.outTime : '-'}</td>
+            <td class="p-3.5 text-center">${statusIcon}</td>
           </tr>
         `;
       });
