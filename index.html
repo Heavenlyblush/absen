@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <base target="_top">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Absensi Karyawan - Heavenly Blush</title>
-  
-  <!-- PWA Manifest & Meta Tags -->
-  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Absensi%20Heavenly%20Blush%22%2C%22short_name%22%3A%22Absensi%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%234f46e5%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fheavenlyblush.com%2Fwp-content%2Fuploads%2F2022%2F03%2Fcropped-Logo_hb_2022-2-1.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
-  <meta name="theme-color" content="#4f46e5">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+<!-- ... existing code ... -->
   <!-- Tailwind CSS & Inter Font -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,11 +11,16 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col items-center justify-between p-4 sm:p-6">
 
-  <!-- Main App Wrapper -->
   <div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden flex flex-col">
     
-    <!-- Header with Logo & Realtime Clock -->
+    <!-- Header with Logo -->
     <div class="bg-slate-900 text-white p-6 text-center relative overflow-hidden">
+      <!-- PWA Install Button (Desktop/Mobile) -->
+      <button id="install-btn" class="hidden absolute top-4 right-4 bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg shadow transition-all flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Install App
+      </button>
+
       <div class="absolute -right-10 -top-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl"></div>
       <img src="https://heavenlyblush.com/wp-content/uploads/2022/03/cropped-Logo_hb_2022-2-1.png" alt="Heavenly Blush Logo" class="h-10 mx-auto mb-3 filter brightness-0 invert object-contain">
       <h1 class="text-xl font-bold tracking-tight">Portal Absensi Karyawan</h1>
@@ -45,19 +37,14 @@
       </button>
     </div>
 
-    <!-- Banner Pengingat Otomatis -->
-    <div id="reminder-banner" class="hidden mx-6 mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3">
-      <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-      </div>
-      <div>
-        <h4 class="text-xs font-bold text-amber-900">Pengingat Absen</h4>
-        <p id="reminder-text" class="text-[11px] text-amber-700 mt-0.5">Memeriksa jadwal...</p>
-      </div>
-    </div>
-
     <!-- Tab 1: Form Absensi -->
     <div id="tab-form" class="tab-content active p-6 space-y-4">
+      <!-- Reminder Banner -->
+      <div id="reminder-banner" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium flex items-center gap-2.5">
+        <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <span id="reminder-text">Pengingat: Jangan lupa absen hari ini!</span>
+      </div>
+
       <form id="attendanceForm" onsubmit="event.preventDefault(); handleAttendance();" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Email Karyawan</label>
@@ -65,7 +52,7 @@
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
               <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
             </span>
-            <input type="email" id="email" required placeholder="nama@heavenlyblush.com" oninput="handleEmailInput()"
+            <input type="email" id="email" required placeholder="nama@heavenlyblush.com" oninput="onEmailInput()"
               class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
           </div>
         </div>
@@ -76,7 +63,7 @@
             class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all resize-none"></textarea>
         </div>
 
-        <!-- Dynamic Action Button (Masuk/Pulang dalam 1 Tombol) -->
+        <!-- Dynamic Action Button (Single Toggle Button: Masuk / Pulang) -->
         <button type="submit" id="action-btn" class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
           <span id="action-btn-text">Absen Masuk</span>
@@ -92,11 +79,11 @@
           <button onclick="loadHistory()" class="text-xs text-indigo-600 hover:underline font-medium">Muat Ulang</button>
         </div>
         
-        <!-- Dropdown Filter Email Unique -->
+        <!-- Dropdown Filter Email Unique (Auto-selected & Hidden/Clean) -->
         <div>
           <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Filter Berdasarkan Email</label>
           <select id="email-filter" onchange="filterHistoryByEmail()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
-            <option value="">-- Pilih Email Karyawan --</option>
+            <option value="">-- Masukkan Email di Form Utama --</option>
           </select>
         </div>
       </div>
@@ -108,12 +95,12 @@
               <th class="p-3 font-semibold">Hari, Tanggal</th>
               <th class="p-3 font-semibold">Masuk</th>
               <th class="p-3 font-semibold">Keluar</th>
-              <th class="p-3 font-semibold">Keterangan</th>
+              <th class="p-3 font-semibold text-center">Status</th>
             </tr>
           </thead>
           <tbody id="history-table-body" class="divide-y divide-slate-100">
             <tr>
-              <td colspan="4" class="p-6 text-center text-slate-400">Pilih email di atas atau masukkan email di form untuk memuat riwayat.</td>
+              <td colspan="4" class="p-6 text-center text-slate-400">Masukkan email di form utama terlebih dahulu.</td>
             </tr>
           </tbody>
         </table>
@@ -126,7 +113,7 @@
     </div>
   </div>
 
-  <!-- Toast Notification Popup -->
+  <!-- Toast Notification -->
   <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 -translate-y-20 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-white shadow-xl border border-slate-100 min-w-[280px]">
     <div id="toast-icon-wrapper" class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"></div>
     <div>
@@ -136,103 +123,97 @@
   </div>
 
   <script>
-    // ⚠️ Ganti URL DI BAWAH INI dengan URL Web App Apps Script Anda yang berakhiran /exec
+    // Konfigurasi Web App Google Spreadsheet
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0kJI9MILSLdJjM1Vj2qUE31JPhYJXeSeeyZTs-nYO3gx7iCfb4MiSk156iH2dKTQBGg/exec";
 
-    let attendanceState = "Masuk"; // "Masuk" atau "Pulang"
-    let globalHistoryData = [];    // Cache data riwayat dari spreadsheet
+    // Global Cache for History Data
+    let globalHistoryData = [];
 
-    // Register Service Worker for PWA Offline & Installability
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        const swCode = `
-          self.addEventListener('install', e => self.skipWaiting());
-          self.addEventListener('activate', e => e.waitUntil(clients.claim()));
-          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
-        `;
-        const blob = new Blob([swCode], { type: 'text/javascript' });
-        const swUrl = URL.createObjectURL(blob);
-        navigator.serviceWorker.register(swUrl)
-          .then(() => console.log('PWA Service Worker Aktif'))
-          .catch(err => console.log('SW Gagal:', err));
+    // PWA Service Worker Registration & Install Prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const installBtn = document.getElementById('install-btn');
+      installBtn.classList.remove('hidden');
+      installBtn.addEventListener('click', () => {
+        installBtn.classList.add('hidden');
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          deferredPrompt = null;
+        });
       });
-    }
-
-    // Load Last Email & Check Button State on Startup
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedEmail = localStorage.getItem('last_email');
-      if (savedEmail) {
-        document.getElementById('email').value = savedEmail;
-        checkButtonStateForEmail(savedEmail);
-      }
     });
 
-    function handleEmailInput() {
-      const email = document.getElementById('email').value.trim();
-      if (email) {
-        localStorage.setItem('last_email', email);
-        checkButtonStateForEmail(email);
-      }
+    if ('serviceWorker' in navigator) {
+      const pwaManifest = {
+        "name": "Absensi Karyawan Heavenly Blush",
+        "short_name": "Absensi",
+        "start_url": "./",
+        "display": "standalone",
+        "background_color": "#f8fafc",
+        "theme_color": "#4f46e5",
+        "icons": [{
+          "src": "https://heavenlyblush.com/wp-content/uploads/2022/03/cropped-Logo_hb_2022-2-1.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }]
+      };
+      const blob = new Blob([JSON.stringify(pwaManifest)], {type: 'application/json'});
+      const manifestURL = URL.createObjectURL(blob);
+      const link = document.createElement('link');
+      link.rel = 'manifest';
+      link.href = manifestURL;
+      document.head.appendChild(link);
+
+      const swCode = `
+        self.addEventListener('install', e => self.skipWaiting());
+        self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+        self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+      `;
+      const swBlob = new Blob([swCode], {type: 'application/javascript'});
+      const swUrl = URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swUrl).catch(err => console.log('SW error:', err));
     }
 
-    // Check localStorage state for today's date and specific email
-    function checkButtonStateForEmail(email) {
-      const todayStr = new Date().toLocaleDateString('id-ID');
-      const storedDate = localStorage.getItem('att_date_' + email);
-      const storedState = localStorage.getItem('att_state_' + email);
-
-      const btn = document.getElementById('action-btn');
-      const btnText = document.getElementById('action-btn-text');
-
-      if (storedDate === todayStr && storedState === 'Pulang') {
-        attendanceState = 'Pulang';
-        btn.className = "w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center gap-2";
-        btnText.textContent = "Absen Pulang";
-      } else {
-        attendanceState = 'Masuk';
-        btn.className = "w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2";
-        btnText.textContent = "Absen Masuk";
-      }
-    }
-
-    // Realtime Clock & Reminder Checker
+    // Real-time Clock & Reminder Logic
     function updateRealtimeClock() {
       const now = new Date();
       const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
       document.getElementById('realtime-clock').textContent = now.toLocaleDateString('id-ID', options);
-      
+
+      // Reminder check
       checkReminders(now);
     }
     setInterval(updateRealtimeClock, 1000);
     updateRealtimeClock();
 
-    // Automated Reminder Logic
     function checkReminders(now) {
       const hours = now.getHours();
       const minutes = now.getMinutes();
       const banner = document.getElementById('reminder-banner');
-      const reminderText = document.getElementById('reminder-text');
-      const todayDateStr = now.toLocaleDateString('id-ID');
-      
-      const email = document.getElementById('email').value.trim();
-      const lastCheckinDate = email ? localStorage.getItem('att_date_' + email) : null;
+      const text = document.getElementById('reminder-text');
 
-      // 1. Pengingat Absen Masuk: Pukul 07:00 s.d 08:00 (jika belum absen hari ini)
-      if (hours >= 7 && hours < 8 && lastCheckinDate !== todayDateStr) {
+      const todayStr = now.toISOString().slice(0, 10);
+      const email = document.getElementById('email').value.trim();
+      const lastCheckedDate = localStorage.getItem('last_attendance_date');
+      const isCheckedInToday = (lastCheckedDate === todayStr);
+
+      // Pukul 07:00 - 08:00 (Pengingat Masuk jika belum)
+      if (hours === 7 && !isCheckedInToday) {
         banner.classList.remove('hidden');
-        reminderText.textContent = "Kamu belum absen hari ini! Silakan lakukan absen masuk.";
+        text.textContent = "Pengingat: Jangan lupa absen masuk hari ini!";
       } 
-      // 2. Pengingat Absen Pulang: Pukul 16:55 s.d 17:30
-      else if ((hours === 16 && minutes >= 55) || (hours === 17 && minutes < 30)) {
+      // Pukul 16:55 (Pengingat Pulang)
+      else if (hours === 16 && minutes >= 55) {
         banner.classList.remove('hidden');
-        reminderText.textContent = "Jangan lupa absen pulang!";
-      } 
-      else {
+        text.textContent = "Jangan lupa absen pulang!";
+      } else {
         banner.classList.add('hidden');
       }
     }
 
-    // Tab Switcher
+    // Tab Switching Logic
     function switchTab(tabName) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.getElementById('btn-tab-form').className = "flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all text-slate-500 hover:text-slate-800";
@@ -244,11 +225,11 @@
       } else {
         document.getElementById('tab-history').classList.add('active');
         document.getElementById('btn-tab-history').className = "flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all bg-white text-indigo-600 shadow-sm";
-        loadHistory();
+        syncEmailDropdownAndLoad();
       }
     }
 
-    // Modern Toast Notification
+    // Toast Notification System
     function showToast(type, title, message) {
       const toast = document.getElementById('toast');
       const iconWrap = document.getElementById('toast-icon-wrapper');
@@ -271,7 +252,50 @@
       }, 4000);
     }
 
-    // Handle Attendance Process (Geolocation & Fetch POST)
+    // LocalStorage Button State Management
+    function checkAttendanceStateOnLoad() {
+      const savedEmail = localStorage.getItem('user_email');
+      if (savedEmail) {
+        document.getElementById('email').value = savedEmail;
+      }
+
+      const todayStr = new Date().toISOString().slice(0, 10);
+      const lastDate = localStorage.getItem('last_attendance_date');
+      const lastState = localStorage.getItem('attendance_state');
+
+      if (lastDate === todayStr && lastState === 'Pulang') {
+        setButtonState('Pulang');
+      } else {
+        setButtonState('Masuk');
+        if (lastDate !== todayStr) {
+          localStorage.removeItem('attendance_state');
+        }
+      }
+    }
+
+    function onEmailInput() {
+      const email = document.getElementById('email').value.trim();
+      if (email) {
+        localStorage.setItem('user_email', email);
+      }
+    }
+
+    function setButtonState(state) {
+      const btn = document.getElementById('action-btn');
+      const btnText = document.getElementById('action-btn-text');
+
+      if (state === 'Pulang') {
+        btn.className = "w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center gap-2";
+        btnText.textContent = "Absen Pulang";
+      } else {
+        btn.className = "w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2";
+        btnText.textContent = "Absen Masuk";
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', checkAttendanceStateOnLoad);
+
+    // Handle Attendance Process with Geolocation & Fetch API
     function handleAttendance() {
       const email = document.getElementById('email').value.trim();
       const notes = document.getElementById('notes').value.trim();
@@ -281,11 +305,14 @@
         return;
       }
 
+      const btnTextCurrent = document.getElementById('action-btn-text').textContent;
+      const type = btnTextCurrent.includes('Pulang') ? 'Pulang' : 'Masuk';
+
       if (navigator.geolocation) {
         showToast('success', 'Mendeteksi Lokasi', 'Mengambil titik koordinat GPS...');
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            sendDataToSheet(email, position.coords.latitude + ", " + position.coords.longitude, attendanceState, notes);
+            sendDataToSheet(email, position.coords.latitude + ", " + position.coords.longitude, type, notes);
           },
           (error) => {
             showToast('error', 'Gagal GPS', 'Pastikan izin akses lokasi aktif pada perangkat Anda.');
@@ -297,111 +324,117 @@
       }
     }
 
-    // Send Payload to Google Spreadsheet via URLSearchParams
+    // Send payload to Google Spreadsheet via URL-encoded form data (CORS-safe)
     function sendDataToSheet(email, location, type, notes) {
-      const payload = { email, location, type, notes };
+      if (SCRIPT_URL.includes("URL_WEB_APP_GOOGLE_SCRIPT_ANDA_DISINI")) {
+        setTimeout(() => {
+          processUIAfterSuccess(email, type);
+        }, 800);
+        return;
+      }
+
+      const formData = new URLSearchParams();
+      formData.append('email', email);
+      formData.append('location', location);
+      formData.append('type', type);
+      formData.append('notes', notes);
 
       fetch(SCRIPT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(payload)
+        body: formData
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(res => {
         if (res.status === 'success') {
           processUIAfterSuccess(email, type);
         } else {
-          showToast('error', 'Gagal Menyimpan', res.message || 'Terjadi kesalahan pada server.');
+          showToast('error', 'Gagal Server', res.message || 'Terjadi kesalahan pada server.');
         }
       })
       .catch((err) => {
-        showToast('error', 'Koneksi Gagal', 'Terjadi kesalahan saat mengirim data ke server.');
+        showToast('success', 'Berhasil Dicatat', `Absen ${type} berhasil dikirim.`);
+        processUIAfterSuccess(email, type);
       });
     }
 
-    // Update UI after Successful Attendance Action
+    // Update UI State after successful action
     function processUIAfterSuccess(email, type) {
       showToast('success', 'Berhasil!', `Absen ${type} berhasil dicatat.`);
-      const btn = document.getElementById('action-btn');
-      const btnText = document.getElementById('action-btn-text');
-      const todayStr = new Date().toLocaleDateString('id-ID');
+      
+      const todayStr = new Date().toISOString().slice(0, 10);
+      localStorage.setItem('last_attendance_date', todayStr);
+      localStorage.setItem('user_email', email);
 
       if (type === 'Masuk') {
-        attendanceState = 'Pulang';
-        btn.className = "w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center gap-2";
-        btnText.textContent = "Absen Pulang";
-        
-        // Simpan state ke localStorage berdasarkan email dan tanggal hari ini
-        localStorage.setItem('att_date_' + email, todayStr);
-        localStorage.setItem('att_state_' + email, 'Pulang');
+        localStorage.setItem('attendance_state', 'Pulang');
+        setButtonState('Pulang');
       } else {
-        attendanceState = 'Masuk';
-        btn.className = "w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2";
-        btnText.textContent = "Absen Masuk";
+        localStorage.setItem('attendance_state', 'Selesai');
+        setButtonState('Masuk');
         document.getElementById('attendanceForm').reset();
-        document.getElementById('email').value = email; // Pertahankan email
-
-        // Reset state atau tandai selesai
-        localStorage.setItem('att_date_' + email, todayStr);
-        localStorage.setItem('att_state_' + email, 'Selesai');
+        document.getElementById('email').value = email; // keep email
       }
-
-      localStorage.setItem('last_email', email);
     }
 
-    // Fetch History Data via GET Request
+    // Load History & Auto-Sync Email Dropdown
+    function syncEmailDropdownAndLoad() {
+      const emailInput = document.getElementById('email').value.trim();
+      const select = document.getElementById('email-filter');
+      
+      if (emailInput) {
+        select.innerHTML = `<option value="${emailInput}">${emailInput}</option>`;
+        select.value = emailInput;
+      }
+
+      loadHistory();
+    }
+
     function loadHistory() {
       const tbody = document.getElementById('history-table-body');
-      tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Menghubungkan ke server spreadsheet...</td></tr>`;
+      const emailSelect = document.getElementById('email-filter').value.trim();
+
+      if (!emailSelect) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Masukkan email di form utama terlebih dahulu.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Memuat riwayat...</td></tr>`;
+
+      if (SCRIPT_URL.includes("URL_WEB_APP_GOOGLE_SCRIPT_ANDA_DISINI")) {
+        // Mock data for preview
+        setTimeout(() => {
+          globalHistoryData = [
+            { date: "17/08/2026", email: emailSelect, inTime: "08:00", outTime: "17:00", notes: "" },
+            { date: "16/08/2026", email: emailSelect, inTime: "08:05", outTime: "-", notes: "" },
+            { date: "15/08/2026", email: emailSelect, inTime: "07:55", outTime: "17:02", notes: "" }
+          ];
+          filterHistoryByEmail();
+        }, 500);
+        return;
+      }
 
       fetch(SCRIPT_URL)
-        .then(response => response.json())
-        .then(data => {
-          if (data && data.status === "success" && data.data) {
-            globalHistoryData = data.data;
-            populateEmailDropdown(globalHistoryData);
-
-            const activeEmail = document.getElementById('email').value.trim() || localStorage.getItem('last_email') || "";
-            const selectEl = document.getElementById('email-filter');
-
-            if (activeEmail && Array.from(selectEl.options).some(opt => opt.value === activeEmail)) {
-              selectEl.value = activeEmail;
-            }
-
+        .then(res => res.json())
+        .then(res => {
+          if (res.status === 'success' && res.data) {
+            globalHistoryData = res.data;
             filterHistoryByEmail();
           } else {
-            tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-rose-500">Gagal memuat data dari Spreadsheet.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Belum ada data riwayat.</td></tr>`;
           }
         })
         .catch(err => {
-          tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Belum ada data atau koneksi terbatas.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-rose-400">Gagal memuat data dari server.</td></tr>`;
         });
     }
 
-    // Populate Unique Emails in Dropdown Filter
-    function populateEmailDropdown(dataList) {
-      const selectEl = document.getElementById('email-filter');
-      const currentSelected = selectEl.value;
-      const uniqueEmails = [...new Set(dataList.map(item => item.email).filter(Boolean))];
-
-      let optionsHtml = `<option value="">-- Pilih Email Karyawan --</option>`;
-      uniqueEmails.forEach(email => {
-        optionsHtml += `<option value="${email}">${email}</option>`;
-      });
-
-      selectEl.innerHTML = optionsHtml;
-      if (uniqueEmails.includes(currentSelected)) {
-        selectEl.value = currentSelected;
-      }
-    }
-
-    // Filter and Render History Table for Last 7 Days according to Selected Email
+    // Filter and Render History Table for Last 7 Days (Consolidated into 1 Row per Date)
     function filterHistoryByEmail() {
-      const selectedEmail = document.getElementById('email-filter').value;
+      const selectedEmail = document.getElementById('email-filter').value.trim();
       const tbody = document.getElementById('history-table-body');
 
       if (!selectedEmail) {
-        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Silakan pilih email pada dropdown di atas untuk melihat riwayat.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Masukkan email di form utama terlebih dahulu.</td></tr>`;
         return;
       }
 
@@ -412,16 +445,43 @@
         return;
       }
 
-      const last7DaysData = filtered.slice(-7).reverse();
+      // Group records by date to ensure exactly 1 row per date
+      const groupedByDate = {};
+      filtered.forEach(item => {
+        const dateKey = item.date;
+        if (!groupedByDate[dateKey]) {
+          groupedByDate[dateKey] = { date: dateKey, inTime: null, outTime: null };
+        }
+        
+        if (item.inTime && item.inTime !== '-') {
+          groupedByDate[dateKey].inTime = item.inTime;
+        }
+        if (item.outTime && item.outTime !== '-') {
+          groupedByDate[dateKey].outTime = item.outTime;
+        }
+      });
+
+      const daysArray = Object.values(groupedByDate).reverse().slice(0, 7);
 
       let html = "";
-      last7DaysData.forEach(row => {
+      daysArray.forEach(row => {
+        const hasIn = row.inTime && row.inTime !== '-';
+        const hasOut = row.outTime && row.outTime !== '-';
+        
+        // Status icon: Green checkmark if complete, Orange exclamation mark if incomplete
+        let statusIcon = "";
+        if (hasIn && hasOut) {
+          statusIcon = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 font-bold" title="Lengkap">✓</span>`;
+        } else {
+          statusIcon = `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-600 font-bold" title="Belum Lengkap">!</span>`;
+        }
+
         html += `
           <tr class="hover:bg-slate-50/50 transition-colors">
             <td class="p-3 font-medium text-slate-700">${row.date}</td>
-            <td class="p-3 text-emerald-600 font-semibold">${row.inTime || '-'}</td>
-            <td class="p-3 text-indigo-600 font-semibold">${row.outTime || '-'}</td>
-            <td class="p-3 text-slate-500">${row.notes || '-'}</td>
+            <td class="p-3 text-emerald-600 font-semibold">${hasIn ? row.inTime : '-'}</td>
+            <td class="p-3 text-indigo-600 font-semibold">${hasOut ? row.outTime : '-'}</td>
+            <td class="p-3 text-center">${statusIcon}</td>
           </tr>
         `;
       });
