@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absensi Karyawan - Heavenly Blush</title>
+  
+  <!-- PWA Manifest & Meta Tags -->
+  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Absensi%20Heavenly%20Blush%22%2C%22short_name%22%3A%22Absensi%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%234f46e5%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fheavenlyblush.com%2Fwp-content%2Fuploads%2F2022%2F03%2Fcropped-Logo_hb_2022-2-1.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Tailwind CSS & Inter Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col items-center justify-between p-4 sm:p-6">
+
+  <!-- Main App Wrapper -->
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden flex flex-col">
+    
+    <!-- Header with Logo & Realtime Clock -->
+    <div class="bg-slate-900 text-white p-6 text-center relative overflow-hidden">
+      <div class="absolute -right-10 -top-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl"></div>
+      <img src="https://heavenlyblush.com/wp-content/uploads/2022/03/cropped-Logo_hb_2022-2-1.png" alt="Heavenly Blush Logo" class="h-10 mx-auto mb-3 filter brightness-0 invert object-contain">
+      <h1 class="text-xl font-bold tracking-tight">Portal Absensi Karyawan</h1>
+      <p id="realtime-clock" class="text-xs text-indigo-200 mt-1 font-medium">Memuat waktu...</p>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-slate-100 bg-slate-50/50 p-1.5 gap-1">
+      <button onclick="switchTab('form')" id="btn-tab-form" class="flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all bg-white text-indigo-600 shadow-sm">
+        Form Absen
+      </button>
+      <button onclick="switchTab('history')" id="btn-tab-history" class="flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all text-slate-500 hover:text-slate-800">
+        Riwayat (7 Hari)
+      </button>
+    </div>
+
+    <!-- Banner Pengingat Otomatis -->
+    <div id="reminder-banner" class="hidden mx-6 mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+      </div>
+      <div>
+        <h4 class="text-xs font-bold text-amber-900">Pengingat Absen</h4>
+        <p id="reminder-text" class="text-[11px] text-amber-700 mt-0.5">Memeriksa jadwal...</p>
+      </div>
+    </div>
+
+    <!-- Tab 1: Form Absensi -->
+    <div id="tab-form" class="tab-content active p-6 space-y-4">
+      <form id="attendanceForm" onsubmit="event.preventDefault(); handleAttendance();" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Email Karyawan</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+            </span>
+            <input type="email" id="email" required placeholder="nama@heavenlyblush.com" 
+              class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Catatan / Keterangan</label>
+          <textarea id="notes" rows="3" placeholder="Opsional (misal: WFH, Dinas Luar)..."
+            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all resize-none"></textarea>
+        </div>
+
+        <!-- Dynamic Action Button (Masuk/Pulang dalam 1 Tombol) -->
+        <button type="submit" id="action-btn" class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+          <span id="action-btn-text">Absen Masuk</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Tab 2: Riwayat Aktivitas & Filter Email -->
+    <div id="tab-history" class="tab-content p-6 space-y-4">
+      <div class="flex flex-col gap-3">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Aktivitas 7 Hari Terakhir</h2>
+          <button onclick="loadHistory()" class="text-xs text-indigo-600 hover:underline font-medium">Muat Ulang</button>
+        </div>
+        
+        <!-- Dropdown Filter Email Unique -->
+        <div>
+          <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Filter Berdasarkan Email</label>
+          <select id="email-filter" onchange="filterHistoryByEmail()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+            <option value="">-- Pilih Email Karyawan --</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-slate-100 max-h-72 overflow-y-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 text-slate-600 sticky top-0 border-b border-slate-100">
+            <tr>
+              <th class="p-3 font-semibold">Hari, Tanggal</th>
+              <th class="p-3 font-semibold">Masuk</th>
+              <th class="p-3 font-semibold">Keluar</th>
+              <th class="p-3 font-semibold">Keterangan</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body" class="divide-y divide-slate-100">
+            <tr>
+              <td colspan="4" class="p-6 text-center text-slate-400">Pilih email di atas atau masukkan email di form untuk memuat riwayat.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer Branding -->
+    <div class="p-4 bg-slate-50 border-t border-slate-100 text-center text-[11px] text-slate-400 font-medium">
+      © 2026 • Absensi Digital • Heavenly Blush
+    </div>
+  </div>
+
+  <!-- Toast Notification Popup -->
+  <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 -translate-y-20 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-white shadow-xl border border-slate-100 min-w-[280px]">
+    <div id="toast-icon-wrapper" class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"></div>
+    <div>
+      <h4 id="toast-title" class="text-xs font-bold text-slate-900"></h4>
+      <p id="toast-message" class="text-xs text-slate-500 mt-0.5"></p>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ Ganti URL DI BAWAH INI dengan URL Web App Apps Script Anda yang berakhiran /exec
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0kJI9MILSLdJjM1Vj2qUE31JPhYJXeSeeyZTs-nYO3gx7iCfb4MiSk156iH2dKTQBGg/exec";
+
+    let attendanceState = "Masuk"; // "Masuk" atau "Pulang"
+    let globalHistoryData = [];    // Cache data riwayat dari spreadsheet
+
+    // Register Service Worker for PWA Offline & Installability
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        const swCode = `
+          self.addEventListener('install', e => self.skipWaiting());
+          self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+        `;
+        const blob = new Blob([swCode], { type: 'text/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swUrl)
+          .then(() => console.log('PWA Service Worker Aktif'))
+          .catch(err => console.log('SW Gagal:', err));
+      });
+    }
+
+    // Realtime Clock & Reminder Checker
+    function updateRealtimeClock() {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      document.getElementById('realtime-clock').textContent = now.toLocaleDateString('id-ID', options);
+      
+      checkReminders(now);
+    }
+    setInterval(updateRealtimeClock, 1000);
+    updateRealtimeClock();
+
+    // Automated Reminder Logic
+    function checkReminders(now) {
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const banner = document.getElementById('reminder-banner');
+      const reminderText = document.getElementById('reminder-text');
+      const todayDateStr = now.toLocaleDateString('id-ID');
+      const lastCheckinDate = localStorage.getItem('last_checkin_date');
+
+      // 1. Pengingat Absen Masuk: Pukul 07:00 s.d 08:00 (jika belum absen hari ini)
+      if (hours >= 7 && hours < 8 && lastCheckinDate !== todayDateStr) {
+        banner.classList.remove('hidden');
+        reminderText.textContent = "Kamu belum absen hari ini! Silakan lakukan absen masuk.";
+      } 
+      // 2. Pengingat Absen Pulang: Pukul 16:55 s.d 17:30
+      else if ((hours === 16 && minutes >= 55) || (hours === 17 && minutes < 30)) {
+        banner.classList.remove('hidden');
+        reminderText.textContent = "Jangan lupa absen pulang!";
+      } 
+      else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    // Tab Switcher
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById('btn-tab-form').className = "flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all text-slate-500 hover:text-slate-800";
+      document.getElementById('btn-tab-history').className = "flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all text-slate-500 hover:text-slate-800";
+
+      if (tabName === 'form') {
+        document.getElementById('tab-form').classList.add('active');
+        document.getElementById('btn-tab-form').className = "flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all bg-white text-indigo-600 shadow-sm";
+      } else {
+        document.getElementById('tab-history').classList.add('active');
+        document.getElementById('btn-tab-history').className = "flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all bg-white text-indigo-600 shadow-sm";
+        loadHistory();
+      }
+    }
+
+    // Modern Toast Notification
+    function showToast(type, title, message) {
+      const toast = document.getElementById('toast');
+      const iconWrap = document.getElementById('toast-icon-wrapper');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-message').textContent = message;
+
+      if (type === 'success') {
+        iconWrap.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600";
+        iconWrap.innerHTML = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`;
+      } else {
+        iconWrap.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-rose-50 text-rose-600";
+        iconWrap.innerHTML = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>`;
+      }
+
+      toast.style.transform = "translateX(-50%) translateY(0)";
+      toast.style.opacity = "1";
+      setTimeout(() => {
+        toast.style.transform = "translateX(-50%) translateY(-20px)";
+        toast.style.opacity = "0";
+      }, 4000);
+    }
+
+    // Handle Attendance Process (Geolocation & Fetch POST)
+    function handleAttendance() {
+      const email = document.getElementById('email').value.trim();
+      const notes = document.getElementById('notes').value.trim();
+
+      if (!email) {
+        showToast('error', 'Validasi Gagal', 'Harap masukkan email Anda terlebih dahulu.');
+        return;
+      }
+
+      if (navigator.geolocation) {
+        showToast('success', 'Mendeteksi Lokasi', 'Mengambil titik koordinat GPS...');
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            sendDataToSheet(email, position.coords.latitude + ", " + position.coords.longitude, attendanceState, notes);
+          },
+          (error) => {
+            showToast('error', 'Gagal GPS', 'Pastikan izin akses lokasi aktif pada perangkat Anda.');
+          },
+          { timeout: 10000 }
+        );
+      } else {
+        showToast('error', 'Tidak Didukung', 'Browser Anda tidak mendukung geolokasi.');
+      }
+    }
+
+    // Send Payload to Google Spreadsheet via URLSearchParams
+    function sendDataToSheet(email, location, type, notes) {
+      const payload = { email, location, type, notes };
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(payload)
+      })
+      .then(response => response.json())
+      .then(res => {
+        if (res.status === 'success') {
+          processUIAfterSuccess(type);
+        } else {
+          showToast('error', 'Gagal Menyimpan', res.message || 'Terjadi kesalahan pada server.');
+        }
+      })
+      .catch((err) => {
+        showToast('error', 'Koneksi Gagal', 'Terjadi kesalahan saat mengirim data ke server.');
+      });
+    }
+
+    // Update UI after Successful Attendance Action
+    function processUIAfterSuccess(type) {
+      showToast('success', 'Berhasil!', `Absen ${type} berhasil dicatat.`);
+      const btn = document.getElementById('action-btn');
+      const btnText = document.getElementById('action-btn-text');
+      const emailVal = document.getElementById('email').value.trim();
+
+      if (type === 'Masuk') {
+        attendanceState = 'Pulang';
+        btn.className = "w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center gap-2";
+        btnText.textContent = "Absen Pulang";
+        
+        const todayStr = new Date().toLocaleDateString('id-ID');
+        localStorage.setItem('last_checkin_date', todayStr);
+      } else {
+        attendanceState = 'Masuk';
+        btn.className = "w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-semibold text-sm rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2";
+        btnText.textContent = "Absen Masuk";
+        document.getElementById('attendanceForm').reset();
+      }
+
+      if (emailVal) {
+        localStorage.setItem('last_email', emailVal);
+      }
+    }
+
+    // Fetch History Data via GET Request
+    function loadHistory() {
+      const tbody = document.getElementById('history-table-body');
+      tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Menghubungkan ke server spreadsheet...</td></tr>`;
+
+      fetch(SCRIPT_URL)
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.status === "success" && data.data) {
+            globalHistoryData = data.data;
+            populateEmailDropdown(globalHistoryData);
+
+            const activeEmail = document.getElementById('email').value.trim() || localStorage.getItem('last_email') || "";
+            const selectEl = document.getElementById('email-filter');
+
+            if (activeEmail && Array.from(selectEl.options).some(opt => opt.value === activeEmail)) {
+              selectEl.value = activeEmail;
+            }
+
+            filterHistoryByEmail();
+          } else {
+            tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-rose-500">Gagal memuat data dari Spreadsheet.</td></tr>`;
+          }
+        })
+        .catch(err => {
+          tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Belum ada data atau koneksi terbatas.</td></tr>`;
+        });
+    }
+
+    // Populate Unique Emails in Dropdown Filter
+    function populateEmailDropdown(dataList) {
+      const selectEl = document.getElementById('email-filter');
+      const currentSelected = selectEl.value;
+      const uniqueEmails = [...new Set(dataList.map(item => item.email).filter(Boolean))];
+
+      let optionsHtml = `<option value="">-- Pilih Email Karyawan --</option>`;
+      uniqueEmails.forEach(email => {
+        optionsHtml += `<option value="${email}">${email}</option>`;
+      });
+
+      selectEl.innerHTML = optionsHtml;
+      if (uniqueEmails.includes(currentSelected)) {
+        selectEl.value = currentSelected;
+      }
+    }
+
+    // Filter and Render History Table for Last 7 Days according to Selected Email
+    function filterHistoryByEmail() {
+      const selectedEmail = document.getElementById('email-filter').value;
+      const tbody = document.getElementById('history-table-body');
+
+      if (!selectedEmail) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Silakan pilih email pada dropdown di atas untuk melihat riwayat.</td></tr>`;
+        return;
+      }
+
+      const filtered = globalHistoryData.filter(item => item.email && item.email.toLowerCase() === selectedEmail.toLowerCase());
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Belum ada riwayat absensi untuk email ini.</td></tr>`;
+        return;
+      }
+
+      const last7DaysData = filtered.slice(-7).reverse();
+
+      let html = "";
+      last7DaysData.forEach(row => {
+        html += `
+          <tr class="hover:bg-slate-50/50 transition-colors">
+            <td class="p-3 font-medium text-slate-700">${row.date}</td>
+            <td class="p-3 text-emerald-600 font-semibold">${row.inTime || '-'}</td>
+            <td class="p-3 text-indigo-600 font-semibold">${row.outTime || '-'}</td>
+            <td class="p-3 text-slate-500">${row.notes || '-'}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
